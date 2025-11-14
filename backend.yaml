@@ -30,13 +30,13 @@
 
   - name: download backend code
     ansible.builtin.get_url:
-      url: 
-      dest: 
+      url: https://expense-builds.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+      dest: /tmp/backend.zip 
 
   - name: unzip backend code
     ansible.builtin.unarchive:
-      src: 
-      dest: 
+      src: /tmp/backend.zip #bydefault checks in ansible server
+      dest: /app 
       remote_src: yes 
 
   - name: install npm dependencies
@@ -47,7 +47,7 @@
   - name: copy backend service 
     ansible.builtin.copy:
       src: backend.service 
-      dest: 
+      dest: /etc/systemd/system/backend.service 
 
   - name: install python mysql dependencies
     ansible.builtin.pip:
@@ -61,7 +61,7 @@
       login_user: root 
       login_password: "{{ login_password }}"
       login_host: "{{ login_host }}"
-      target: 
+      target: /app/schema/backend.sql 
       state: import 
       name: all 
 
